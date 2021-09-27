@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.fxmisc.richtext.*?>
+
+<AnchorPane minHeight="50.0" minWidth="600.0" prefHeight="600.0" prefWidth="1350.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.Main">
+   <MenuBar minHeight="25.0" prefHeight="25.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+     <menus>
+       <Menu mnemonicParsing="false" text="File">
+         <items>
+           <MenuItem mnemonicParsing="false" text="Close" />
+         </items>
+       </Menu>
+       <Menu mnemonicParsing="false" text="Edit">
+         <items>
+           <MenuItem mnemonicParsing="false" text="Delete" />
+         </items>
+       </Menu>
+       <Menu mnemonicParsing="false" text="Help">
+         <items>
+           <MenuItem mnemonicParsing="false" text="About" />
+         </items>
+       </Menu>
+         <Menu mnemonicParsing="false" text="Tool">
+           <items>
+             <MenuItem fx:id="buildBtn" mnemonicParsing="false" onAction="#build" text="Build" />
+           </items>
+         </Menu>
+     </menus>
+   </MenuBar>
+    <HBox alignment="CENTER_LEFT" layoutX="3.0" layoutY="5.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="195.0" prefWidth="351.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+        <VBox fx:id="editorPane" minHeight="0.0" minWidth="400.0" prefHeight="400.0" prefWidth="1500.0">
+         <AnchorPane prefHeight="500.0" prefWidth="600.0">
+            <children>
+               <CodeArea fx:id="specialArea" autoScrollOnDragDesired="false" layoutX="30.0" lineHighlighterOn="true" onKeyTyped="#isScrolled" onScroll="#isScrolledCodeArea" prefHeight="554.0" prefWidth="895.0" style="-fx-font-size: 15;" wrapText="true" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <opaqueInsets>
+                     <Insets />
+                  </opaqueInsets>
+                  <padding>
+                     <Insets top="25.0" />
+                  </padding></CodeArea>
+               <TableView fx:id="lineNumberArea" editable="true" maxWidth="30.0" minWidth="30.0" prefHeight="500.0" prefWidth="30.0" stylesheets="@main.css" AnchorPane.leftAnchor="0.0">
+                 <columns>
+                   <TableColumn fx:id="lineNumberColumn" minWidth="30.0" prefWidth="30.0" />
+                 </columns>
+               </TableView>
+            </children>
+         </AnchorPane>
+        </VBox>
+        <AnchorPane maxWidth="1000.0" minWidth="200.0" prefHeight="200.0" prefWidth="1000.0" HBox.hgrow="ALWAYS">
+         <children>
+            <TabPane maxWidth="50000.0" minWidth="360.0" prefHeight="575.0" prefWidth="360.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+              <tabs>
+                <Tab text="Tokens">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TableView fx:id="tokensTable" layoutX="-37.0" layoutY="27.0" maxWidth="5000.0" minWidth="360.0" prefHeight="546.0" prefWidth="425.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columns>
+                                    <TableColumn fx:id="classColumn" prefWidth="75.0" text="Класс" />
+                                  <TableColumn fx:id="columnName" editable="false" prefWidth="90.0" text="Токен" />
+                                  <TableColumn fx:id="lengthColumn" prefWidth="90.0" text="Длина" />
+                                    <TableColumn fx:id="commonPlaceColumn" prefWidth="90.0" resizable="false" text="Положение" />
+                                    <TableColumn fx:id="lineColumn" prefWidth="75.0" text="Строка" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="Untitled Tab 2">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+        </AnchorPane>
+    </HBox>
+</AnchorPane>
