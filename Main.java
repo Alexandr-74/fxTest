@@ -136,5 +136,7 @@ public class Main extends Application{
         lineColumn.setCellValueFactory(param-> new SimpleStringProperty(param.getValue().getLinePoint()));
         tokensTable.getItems().addAll(tokens);
 
+        ErrorAnalyser errors = new ErrorAnalyser(tokens);
+
     }
 }

@@ -13,7 +13,7 @@ public class Parser {
             "long strictfp volatile const float native super while";
 
 
-    private final String separators="\\( \\) \\{ \\} \\[ ] ; , \\. \\.\\.\\. @ ::";
+    private final String separators="\\( \\) \\{ } \\[ ] ; , \\. \\.\\.\\. @ ::";
     //(=%1 )=%2 {=%3 }=%4 [=%5 ]=%6 .=%8 ...=%9
     private String operators="= > < ! ~ \\? : -> == >= <= != && \\|\\| \\+\\+ -- \\+ - \\* / & \\| \\^ % << >> >>> \\+= -= \\*= /= &= \\|= \\^= %= <<= >>= >>>=";
     //?=#1 ++=#2 +=#3 *=#4 ^=#5 +==#6 *==#7 ^==#8 ||=#9 |=#10 |==#11
@@ -54,10 +54,12 @@ public class Parser {
                 startCommonPoint+=1;
                 startLinePoint+=1;
             } else if (lines[i].equals("%6")) {
-                endLinePoint=1;
-                startCommonPoint+=1;
+                endLinePoint+=2;
+                startCommonPoint+=2;
+                Token token = new Token("\\n","Enter",startLinePoint,endLinePoint,startCommonPoint,columnPoint);
+                allTokens.add(token);
                 startLinePoint=0;
-                columnPoint+=1;
+                columnPoint+=2;
                 endLinePoint=0;
             } else if (!lines[i].equals("")) {
                 i+=checkIsKeyword(lines[i],i);
@@ -134,6 +136,7 @@ public class Parser {
                 .replace("("," ( ")
                 .replace(")"," ) ")
                 .replace("{"," { ")
+                .replace("}"," } ")
                 .replace("["," [ ")
                 .replace("."," . ")
                 .replace("..."," . ")
@@ -179,41 +182,49 @@ public class Parser {
     }
 
     public int checkIsLiteral(String line, int i) {
-        if (line.matches("\\d+")&&lines[i+1].matches("%8|,")&&lines[i+2].matches("\\d+")) {
+        if (line.matches("\\d+")&&lines[i+1].matches("\\.|,")&&lines[i+2].matches("\\d{2,}")) {
             endLinePoint+=lines[i].length()+1+ lines[i+2].length();
-            String literal = (lines[i] + lines[i+1] + lines[i+2]).replace(" ","").replace("%8",".");
-            Token token = new Token(literal,"DecimalIntegerLiteral",startLinePoint,endLinePoint,startCommonPoint,columnPoint);
+            String literal = (lines[i] + lines[i+1] + lines[i+2]);
+            Token token = new Token(literal,"FloatingPointLiteral",startLinePoint,endLinePoint,startCommonPoint,columnPoint);
             allTokens.add(token);
             startCommonPoint+=endLinePoint;
             startLinePoint=endLinePoint;
             i=2;
             isLiteral=true;
-        } else if (line.matches("0.*")) {
-            if (line.matches("0x.*")) {
-                endLinePoint += line.length();
-                Token token = new Token(line,"DecimalHexLiteral", startLinePoint, endLinePoint, startCommonPoint,columnPoint);
-                allTokens.add(token);
-                startCommonPoint += endLinePoint;
-                startLinePoint = endLinePoint;
-                i = 0;
-                isLiteral = true;
-            } else if (line.matches("0b.*")) {
-                endLinePoint += line.length();
-                Token token = new Token(line, "DecimalBinaryLiteral",startLinePoint, endLinePoint, startCommonPoint,columnPoint);
-                allTokens.add(token);
-                startCommonPoint += endLinePoint;
-                startLinePoint = endLinePoint;
-                i = 0;
-                isLiteral = true;
-            } else  {
-                endLinePoint += line.length();
-                Token token = new Token(line,"DecimalOctalLiteral", startLinePoint, endLinePoint, startCommonPoint,columnPoint);
-                allTokens.add(token);
-                startCommonPoint += endLinePoint;
-                startLinePoint = endLinePoint;
-                i = 0;
-                isLiteral = true;
-            }
+        } else if (line.matches("\\d+")) {
+                if (line.matches("0x.*")) {
+                    endLinePoint += line.length();
+                    Token token = new Token(line,"DecimalHexLiteral", startLinePoint, endLinePoint, startCommonPoint,columnPoint);
+                    allTokens.add(token);
+                    startCommonPoint += endLinePoint;
+                    startLinePoint = endLinePoint;
+                    i = 0;
+                    isLiteral = true;
+                } else if (line.matches("0b.*")) {
+                    endLinePoint += line.length();
+                    Token token = new Token(line, "DecimalBinaryLiteral",startLinePoint, endLinePoint, startCommonPoint,columnPoint);
+                    allTokens.add(token);
+                    startCommonPoint += endLinePoint;
+                    startLinePoint = endLinePoint;
+                    i = 0;
+                    isLiteral = true;
+                } else if (line.matches("0.*")) {
+                    endLinePoint += line.length();
+                    Token token = new Token(line,"DecimalOctalLiteral", startLinePoint, endLinePoint, startCommonPoint,columnPoint);
+                    allTokens.add(token);
+                    startCommonPoint += endLinePoint;
+                    startLinePoint = endLinePoint;
+                    i = 0;
+                    isLiteral = true;
+                } else {
+                    endLinePoint += line.length();
+                    Token token = new Token(line,"DecimalIntegerLiteral", startLinePoint, endLinePoint, startCommonPoint,columnPoint);
+                    allTokens.add(token);
+                    startCommonPoint += endLinePoint;
+                    startLinePoint = endLinePoint;
+                    i = 0;
+                    isLiteral = true;
+                }
         } else if (line.matches("literal\\d")) {
             StringBuilder literal= new StringBuilder();
             literal.append(literalsMap.get(line));
